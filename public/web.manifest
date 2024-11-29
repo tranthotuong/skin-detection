@@ -1,0 +1,31 @@
+{
+  "name": "Skin Detection",
+  "short_name": "SKD",
+  "theme_color": "#8936FF",
+  "background_color": "#333333",
+  "start_url": "/",
+  "id": "SkinDetection",
+  "display": "standalone",
+  "description": "SkinCheck PWA helps you quickly detect skin issues by capturing photos for instant AI analysis. It’s mobile-friendly, keeps a history of scans, and works offline to support your skin health anytime, anywhere.",
+  "icons": [
+    {
+      "purpose": "maskable",
+      "sizes": "512x512",
+      "src": "icon512_maskable.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "any",
+      "sizes": "512x512",
+      "src": "icon512_rounded.png",
+      "type": "image/png"
+    },
+    {
+      "src": "icon512_rounded.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "screenshots": [
+  ]
+}
