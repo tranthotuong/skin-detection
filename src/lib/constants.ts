@@ -17,6 +17,7 @@ export const PROFILE_URL = "/profile";
 export const DETECTION_URL = "/detection";
 export const SIGN_UP_URL = "/sign-up";
 export const SIGN_IN_URL = "/sign-in";
+export const HISTORY_URL = "/history";
 
 //Object
 export const HEADER_SIGN = {

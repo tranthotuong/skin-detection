@@ -11,15 +11,18 @@ type AuthContextType = {
   tokenKey: string | null;
   accUserKey: string | null;
   email: string | null;
+  currentUser: any | null;
   dayOfWeeks: Array<{name: string, shortName: string}>;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   signup: (email: string, password: string) => Promise<void>;
   fetchSports: () => Promise<any>;
-  fetchUserInfo: () => Promise<any>;
   updateAccountInfo: (data: UpdateAccountInfoPayload) => Promise<void>;
+  openCamera: () => void;
+  closeCamera: () => void;
   isAuthenticated: boolean;
   loading: boolean;
+  isCamera: boolean;
 };
 
 // Define the payload type for account updates
@@ -41,7 +44,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [tokenKey, setTokenKey] = useState<string | null>(null);
   const [accUserKey, setAccUserKey] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isCamera, setIsCamera] = useState<boolean>(false);
   const [dayOfWeeks] =  useState<Array<{name: string, shortName: string}>>([{
     name: 'Monday',
     shortName: 'M'
@@ -66,6 +71,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     shortName: 'S'
   }])
 
+
   // Load tokenKey and accUserKey from localStorage on app initialization
   useEffect(() => {
     const storedTokenKey = localStorage.getItem("tokenKey");
@@ -82,6 +88,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
     setLoading(false);
   }, []);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const data = await fetchUserInfo();
+        setCurrentUser(data || null);
+      } catch (err: any) {
+        console.log(err as string);
+      }
+    }
+    if(tokenKey && email){
+      fetchUser();
+    }
+  }, [tokenKey, email]);
 
   /**
    * Login handler
@@ -151,10 +171,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  const openCamera = ():void => {
+    setIsCamera(true);
+  }
+
+  const closeCamera = ():void => {
+    setIsCamera(false);
+  }
+
   const isAuthenticated = !!tokenKey;
 
   return (
-    <AuthContext.Provider value={{ tokenKey, accUserKey, email, dayOfWeeks, login, logout, signup, fetchSports, fetchUserInfo, updateAccountInfo, isAuthenticated, loading }}>
+    <AuthContext.Provider value={{ tokenKey, accUserKey, email, currentUser, dayOfWeeks, isCamera, login, logout, signup, fetchSports, updateAccountInfo, openCamera, closeCamera, isAuthenticated, loading }}>
       {children}
     </AuthContext.Provider>
   );

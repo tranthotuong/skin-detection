@@ -4,6 +4,7 @@ import React from "react";
 import "./globals.css";
 import "@radix-ui/themes/styles.css";
 import { AuthProvider } from "@/context/AuthContext";
+import ChildrenNodeClient from "./ChildrenNodeClient";
 
 export default function RootLayoutClient({
   children,
@@ -29,7 +30,7 @@ export default function RootLayoutClient({
   return (
     <AuthProvider>
       <div className="text-white flex flex-col h-screen">
-        <div className="w-full h-full">{children}</div>
+            <ChildrenNodeClient>{children}</ChildrenNodeClient>
       </div>
     </AuthProvider>
   );
