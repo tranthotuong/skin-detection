@@ -9,6 +9,7 @@ export const SIGNUP_ENDPOINT = `${API_BASE_URL}/auth/signup`;
 export const ACCOUNT_UPDATE_ENDPOINT = `${API_BASE_URL}/auth/update`;
 export const GET_SPORTS_ENDPOINT  = `${API_BASE_URL}/sport`;
 export const GET_USER_ENDPOINT  = `${API_BASE_URL}/auth/user`;
+export const PUT_IMAGE_ENDPOINT  = `${API_BASE_URL}/scan-history/diagnose`;
 // export const TOKEN_STORAGE_KEY = "tokenKey";
 // export const ACC_USER_KEY = "accUserKey";
 

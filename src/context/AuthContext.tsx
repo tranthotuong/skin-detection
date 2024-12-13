@@ -6,6 +6,7 @@ import { login as loginService,
   signup as signupService, 
   updateAccountInfo as updateAccountInfoService} from "../services/authService";
 import { getSports as getSportsService, getUserInfo as getUserInfoService  } from "../services/skinService";
+import { diagnoseImage  as diagnoseImageService  } from "../services/diagnoseService";
 
 type AuthContextType = {
   tokenKey: string | null;
@@ -18,6 +19,7 @@ type AuthContextType = {
   signup: (email: string, password: string) => Promise<void>;
   fetchSports: () => Promise<any>;
   updateAccountInfo: (data: UpdateAccountInfoPayload) => Promise<void>;
+  callDiagnoseImage: (formData: FormData) => Promise<any>;
   openCamera: () => void;
   closeCamera: () => void;
   isAuthenticated: boolean;
@@ -179,10 +181,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setIsCamera(false);
   }
 
+  const callDiagnoseImage = async (formData: FormData) => {
+    try {
+      const response = await diagnoseImageService(formData);
+      return response;
+    } catch (error: any) {
+      throw new Error((error.response?.data?.message as string) || 'Failed to diagnose image');
+    }
+  };
+
   const isAuthenticated = !!tokenKey;
 
   return (
-    <AuthContext.Provider value={{ tokenKey, accUserKey, email, currentUser, dayOfWeeks, isCamera, login, logout, signup, fetchSports, updateAccountInfo, openCamera, closeCamera, isAuthenticated, loading }}>
+    <AuthContext.Provider value={{ tokenKey, accUserKey, email, currentUser, dayOfWeeks, isCamera, login, logout, signup, fetchSports, updateAccountInfo, callDiagnoseImage, openCamera, closeCamera, isAuthenticated, loading }}>
       {children}
     </AuthContext.Provider>
   );
