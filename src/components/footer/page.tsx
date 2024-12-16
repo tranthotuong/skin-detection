@@ -7,7 +7,7 @@ const Footer: React.FC = () => {
 
     return (
         <div
-            className="transform justify-between bg-blue-300 w-full flex">
+            className="transform justify-between bg-blue-300 w-full flex md:hidden">
             <span className="sr-only">Home</span>
             <Link href={DETECTION_URL} className="inline-flex flex-col items-center text-xs font-medium text-gray-800 py-3 px-4 flex-grow">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-9 h-9">

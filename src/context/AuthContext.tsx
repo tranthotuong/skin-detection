@@ -5,8 +5,12 @@ import { login as loginService,
   logout as logoutService, 
   signup as signupService, 
   updateAccountInfo as updateAccountInfoService} from "../services/authService";
-import { getSports as getSportsService, getUserInfo as getUserInfoService  } from "../services/skinService";
+import { getSports as getSportsService, 
+  getUserInfo as getUserInfoService, 
+  getTopHistories as getTopHistoriesService,
+  getHistories as getHistoriesService } from "../services/skinService";
 import { diagnoseImage  as diagnoseImageService  } from "../services/diagnoseService";
+import { promises } from "dns";
 
 type AuthContextType = {
   tokenKey: string | null;
@@ -18,6 +22,8 @@ type AuthContextType = {
   logout: () => void;
   signup: (email: string, password: string) => Promise<void>;
   fetchSports: () => Promise<any>;
+  fetchTopHistoies: () => Promise<any>;
+  fetchHistoies: (queryParams: { diseaseName?: string; sortOrder?: 'asc' | 'desc' }) => Promise<any>;
   updateAccountInfo: (data: UpdateAccountInfoPayload) => Promise<void>;
   callDiagnoseImage: (formData: FormData) => Promise<any>;
   openCamera: () => void;
@@ -190,10 +196,26 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  const fetchTopHistoies = async () => {
+    try {
+      return await getTopHistoriesService(); // Call the sports service
+    } catch (error: any) {
+      throw new Error((error.response?.data?.message as string) || "Failed to fetch top histories data");
+    }
+  };
+
+  const fetchHistoies = async (queryParams: { diseaseName?: string; sortOrder?: 'asc' | 'desc' }) => {
+    try {
+      return await getHistoriesService(queryParams); // Call the sports service
+    } catch (error: any) {
+      throw new Error((error.response?.data?.message as string) || "Failed to fetch histories data");
+    }
+  };
+
   const isAuthenticated = !!tokenKey;
 
   return (
-    <AuthContext.Provider value={{ tokenKey, accUserKey, email, currentUser, dayOfWeeks, isCamera, login, logout, signup, fetchSports, updateAccountInfo, callDiagnoseImage, openCamera, closeCamera, isAuthenticated, loading }}>
+    <AuthContext.Provider value={{ tokenKey, accUserKey, email, currentUser, dayOfWeeks, isCamera, login, logout, signup, fetchSports, fetchTopHistoies, fetchHistoies, updateAccountInfo, callDiagnoseImage, openCamera, closeCamera, isAuthenticated, loading }}>
       {children}
     </AuthContext.Provider>
   );

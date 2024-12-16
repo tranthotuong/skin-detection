@@ -1,10 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { MAINPAGE, SIGN_IN_URL } from "@/lib/constants";
+import { MAINPAGE, SIGN_IN_URL, HISTORY_URL } from "@/lib/constants";
 import { useAuth } from "@/context/AuthContext";
 import Footer from "@/components/footer/page";
 import Header from "@/components/header/page";
+import Sidebar from "@/components/sidebar/page";
+import { datePipe } from '@/lib/utils';
+import Link from "next/link";
 
 const Detection: React.FC = () => {
   const [isOnline, setIsOnline] = useState(false);
@@ -12,6 +15,7 @@ const Detection: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [totalStep] = useState(2);
   const [sports, setSports] = useState<any[]>([]);
+  const [topHistories, setTopHistories] = useState<any[]>([]);
   const [error, setError] = useState<any>(null);
   const [name, setName] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
@@ -19,10 +23,10 @@ const Detection: React.FC = () => {
   const [selectedSports, setSelectedSports] = useState<number[]>([]);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const router = useRouter();
-  const { isAuthenticated, fetchSports, dayOfWeeks, updateAccountInfo, currentUser } = useAuth();
+  const { isAuthenticated, fetchSports, dayOfWeeks, updateAccountInfo, currentUser, fetchTopHistoies } = useAuth();
 
   useEffect(() => {
-    if(currentUser){
+    if (currentUser) {
       setIsFirstLogin(currentUser?.firstLogin || false);
     }
   }, [currentUser]);
@@ -36,8 +40,21 @@ const Detection: React.FC = () => {
         setError(err as string);
       }
     };
-    fetchAndSetSports();
-  }, []);
+
+    const fetchAndSetTopHistories = async () => {
+      try {
+        const data = await fetchTopHistoies();
+        setTopHistories(data);
+      } catch (err: any) {
+        setError(err as string);
+      }
+    };
+    if (isFirstLogin) {
+      fetchAndSetSports();
+    } else {
+      fetchAndSetTopHistories();
+    }
+  }, [isFirstLogin]);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -123,8 +140,9 @@ const Detection: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto md:px-4 px-0 max-w-[1024px] h-full">
-      <div className="lg:px-8 w-full h-full">
+    <div className={isFirstLogin? 'container mx-auto md:px-4 px-0 max-w-[1024px] h-full' : 'flex h-full w-full'}>
+      <Sidebar/>
+      <div className={'w-full h-full' + (isFirstLogin ? 'lg:px-8' : '')}>
         {isFirstLogin ? (
           <div className="flex w-full h-full pt-20 md:pt-0 md:items-center">
             <div className="text-start w-full px-6">
@@ -286,7 +304,7 @@ const Detection: React.FC = () => {
         ) : (
           <div className="w-full flex flex-col h-full">
             <div className="basis-full">
-              <Header/>
+              <Header />
 
               <div className="items-center px-6 py-3">
                 <form action="" className="relative w-auto">
@@ -327,48 +345,30 @@ const Detection: React.FC = () => {
 
               <div className="flex items-center justify-between px-6 py-3 gap-6">
                 <p className="text-black font-bold text-lg">Latest Diagnosis</p>
-                <p className="text-gray-400 font-semibold">see all</p>
+                <Link href={HISTORY_URL} className="text-gray-400 font-semibold">see all</Link>
               </div>
 
               <div className="px-6">
-                <ul role="list" className="mt-1 space-y-2">
-                  <li>
-                    <div className="flex items-center gap-x-2">
-                      <img className="w-12 rounded-full"
-                        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        alt="" />
-                      <div className="">
-                        <p className="text-sm/2 font-semibold tracking-tight text-gray-600">Alert: New Skin Disease
-                          Discovered - Learn More Now!</p>
+                <div className="gap-3 flex flex-col flow overflow-x-hidden overflow-y-auto">
+                  {topHistories.length > 0 && topHistories.map((h) => (
+                    <div key={h.id} className="flex justify-between gap-x-6">
+                      <div className="flex min-w-0 gap-x-4">
+                        <img className="sm:h-12 sm:w-12 h-9 w-9 flex-none rounded-full bg-gray-50"
+                          src={h.imageUrl}
+                          alt={h?.disease?.name || h.id} />
+                        <div className="min-w-0 flex items-center justify-center">
+                          <div>
+                            <p className="sm:text-sm text-xs font-bold text-black">{h?.disease?.name || 'Unknown'}</p>
+                            <p className="truncate sm:text-xs text-[.7rem] text-black">{datePipe(h.scanDate, 'MMM dd, yyyy')}</p>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </li>
-                  <li>
-                    <div className="flex items-center gap-x-2">
-                      <img className="w-12 rounded-full"
-                        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        alt="" />
-                      <div className="">
-                        <p className="text-sm/2 font-semibold tracking-tight text-gray-600">Conference Alert: Advanced AI
-                          for skin analysis by Dr. Kureha</p>
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div className="flex items-center gap-x-2">
-                      <img className="w-12 rounded-full"
-                        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        alt="" />
-                      <div className="">
-                        <p className="text-sm/2 font-semibold tracking-tight text-gray-600">Revealing the Surprising Facts
-                          About Women's Skin - Research</p>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
+                  ))}
+                </div>
               </div>
             </div>
-            <Footer/>
+            <Footer />
           </div>
         )}
       </div>

@@ -7,8 +7,12 @@ export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://loca
 export const LOGIN_ENDPOINT = `${API_BASE_URL}/auth/login`;
 export const SIGNUP_ENDPOINT = `${API_BASE_URL}/auth/signup`;
 export const ACCOUNT_UPDATE_ENDPOINT = `${API_BASE_URL}/auth/update`;
+/*GET*/
 export const GET_SPORTS_ENDPOINT  = `${API_BASE_URL}/sport`;
 export const GET_USER_ENDPOINT  = `${API_BASE_URL}/auth/user`;
+export const GET_TOP_HISTORY_ENDPOINT  = `${API_BASE_URL}/scan-history/top`;
+export const GET_LIST_HISTORY_ENDPOINT  = `${API_BASE_URL}/scan-history/list`;
+/*PUT*/
 export const PUT_IMAGE_ENDPOINT  = `${API_BASE_URL}/scan-history/diagnose`;
 // export const TOKEN_STORAGE_KEY = "tokenKey";
 // export const ACC_USER_KEY = "accUserKey";
