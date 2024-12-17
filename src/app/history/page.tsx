@@ -3,13 +3,14 @@ import Footer from "@/components/footer/page";
 import Header from "@/components/header/page";
 import Sidebar from "@/components/sidebar/page";
 import { useAuth } from "@/context/AuthContext";
-import { SIGN_IN_URL } from "@/lib/constants";
+import { SIGN_IN_URL, DETECTION_URL } from "@/lib/constants";
 import { datePipe } from "@/lib/utils";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const History: React.FC = () => {
-    const { isAuthenticated, fetchHistoies } = useAuth();
+    const { isAuthenticated, fetchHistories } = useAuth();
     const [histories, setHistories] = useState<any[]>([]);
     const [error, setError] = useState<any>(null);
     const [search, setSearch] = useState<any>('');
@@ -34,7 +35,7 @@ const History: React.FC = () => {
     useEffect(() => {
         const fetchAndSetHistories = async () => {
             try {
-                const data = await fetchHistoies({
+                const data = await fetchHistories({
                     diseaseName: search, // Filter by disease name
                     sortOrder: 'asc',        // Sort by ascending scan date
                 });
@@ -97,7 +98,7 @@ const History: React.FC = () => {
                             style={{ maxHeight: 'calc(100vh - 126px)' }}>
                             {
                                 histories.length > 0 ? histories.map((h) => (
-                                    <div key={h.id} className="flex justify-between gap-x-6 rounded-3xl px-3 py-2.5 bg-gray-200">
+                                    <Link href={`${DETECTION_URL}/${h.id}`} key={h.id} className="flex justify-between gap-x-6 rounded-3xl px-3 py-2.5 bg-gray-200">
                                         <div className="flex min-w-0 gap-x-4">
                                             <img className="sm:h-14 sm:w-14 h-11 w-11 flex-none rounded-full bg-gray-50"
                                                 src={h.imageUrl}
@@ -109,7 +110,7 @@ const History: React.FC = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </Link>
                                 )) :
                                     Array.from({ length: 5 }).map((_, i) => (
                                         <div key={i} role="status" className="animate-pulse w-full">

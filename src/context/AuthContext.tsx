@@ -8,9 +8,10 @@ import { login as loginService,
 import { getSports as getSportsService, 
   getUserInfo as getUserInfoService, 
   getTopHistories as getTopHistoriesService,
-  getHistories as getHistoriesService } from "../services/skinService";
+  getHistories as getHistoriesService,
+  getDetailHistory as getDetailHistoryService } from "../services/skinService";
 import { diagnoseImage  as diagnoseImageService  } from "../services/diagnoseService";
-import { promises } from "dns";
+import { DETECTION_URL } from "@/lib/constants";
 
 type AuthContextType = {
   tokenKey: string | null;
@@ -22,12 +23,15 @@ type AuthContextType = {
   logout: () => void;
   signup: (email: string, password: string) => Promise<void>;
   fetchSports: () => Promise<any>;
-  fetchTopHistoies: () => Promise<any>;
-  fetchHistoies: (queryParams: { diseaseName?: string; sortOrder?: 'asc' | 'desc' }) => Promise<any>;
+  fetchTopHistories: () => Promise<any>;
+  fetchHistories: (queryParams: { diseaseName?: string; sortOrder?: 'asc' | 'desc' }) => Promise<any>;
+  fetchHistory: (id: number) => Promise<any>;
   updateAccountInfo: (data: UpdateAccountInfoPayload) => Promise<void>;
   callDiagnoseImage: (formData: FormData) => Promise<any>;
   openCamera: () => void;
   closeCamera: () => void;
+  setDefaultPage: React.Dispatch<React.SetStateAction<string>>;
+  defaultPage: string,
   isAuthenticated: boolean;
   loading: boolean;
   isCamera: boolean;
@@ -77,8 +81,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   },{
     name: 'Sunday',
     shortName: 'S'
-  }])
-
+  }]);
+  const [defaultPage, setDefaultPage] = useState<string>(DETECTION_URL);
 
   // Load tokenKey and accUserKey from localStorage on app initialization
   useEffect(() => {
@@ -196,7 +200,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  const fetchTopHistoies = async () => {
+  const fetchTopHistories = async () => {
     try {
       return await getTopHistoriesService(); // Call the sports service
     } catch (error: any) {
@@ -204,18 +208,26 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  const fetchHistoies = async (queryParams: { diseaseName?: string; sortOrder?: 'asc' | 'desc' }) => {
+  const fetchHistories = async (queryParams: { diseaseName?: string; sortOrder?: 'asc' | 'desc' }) => {
     try {
       return await getHistoriesService(queryParams); // Call the sports service
     } catch (error: any) {
       throw new Error((error.response?.data?.message as string) || "Failed to fetch histories data");
     }
   };
+  
+  const fetchHistory = async (id: number) => {
+    try {
+      return await getDetailHistoryService(id); // Call the sports service
+    } catch (error: any) {
+      throw new Error((error.response?.data?.message as string) || "Failed to fetch history data");
+    }
+  };
 
   const isAuthenticated = !!tokenKey;
 
   return (
-    <AuthContext.Provider value={{ tokenKey, accUserKey, email, currentUser, dayOfWeeks, isCamera, login, logout, signup, fetchSports, fetchTopHistoies, fetchHistoies, updateAccountInfo, callDiagnoseImage, openCamera, closeCamera, isAuthenticated, loading }}>
+    <AuthContext.Provider value={{ tokenKey, accUserKey, email, currentUser, dayOfWeeks, isCamera, login, logout, signup, fetchSports, fetchTopHistories, fetchHistories, fetchHistory, updateAccountInfo, callDiagnoseImage, openCamera, closeCamera, setDefaultPage, defaultPage, isAuthenticated, loading }}>
       {children}
     </AuthContext.Provider>
   );

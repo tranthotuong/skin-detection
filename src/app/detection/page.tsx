@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { MAINPAGE, SIGN_IN_URL, HISTORY_URL } from "@/lib/constants";
+import { MAINPAGE, SIGN_IN_URL, HISTORY_URL, DETECTION_URL } from "@/lib/constants";
 import { useAuth } from "@/context/AuthContext";
 import Footer from "@/components/footer/page";
 import Header from "@/components/header/page";
@@ -23,7 +23,7 @@ const Detection: React.FC = () => {
   const [selectedSports, setSelectedSports] = useState<number[]>([]);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const router = useRouter();
-  const { isAuthenticated, fetchSports, dayOfWeeks, updateAccountInfo, currentUser, fetchTopHistoies } = useAuth();
+  const { isAuthenticated, fetchSports, dayOfWeeks, updateAccountInfo, currentUser, fetchTopHistories } = useAuth();
 
   useEffect(() => {
     if (currentUser) {
@@ -43,7 +43,7 @@ const Detection: React.FC = () => {
 
     const fetchAndSetTopHistories = async () => {
       try {
-        const data = await fetchTopHistoies();
+        const data = await fetchTopHistories();
         setTopHistories(data);
       } catch (err: any) {
         setError(err as string);
@@ -351,7 +351,7 @@ const Detection: React.FC = () => {
               <div className="px-6">
                 <div className="gap-3 flex flex-col flow overflow-x-hidden overflow-y-auto">
                   {topHistories.length > 0 && topHistories.map((h) => (
-                    <div key={h.id} className="flex justify-between gap-x-6">
+                    <Link href={`${DETECTION_URL}/${h.id}`} key={h.id} className="flex justify-between gap-x-6">
                       <div className="flex min-w-0 gap-x-4">
                         <img className="sm:h-12 sm:w-12 h-9 w-9 flex-none rounded-full bg-gray-50"
                           src={h.imageUrl}
@@ -363,7 +363,7 @@ const Detection: React.FC = () => {
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </div>

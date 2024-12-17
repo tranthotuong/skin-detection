@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_SPORTS_ENDPOINT, GET_USER_ENDPOINT, GET_TOP_HISTORY_ENDPOINT, GET_LIST_HISTORY_ENDPOINT } from '@/lib/constants';
+import { GET_SPORTS_ENDPOINT, GET_USER_ENDPOINT, GET_TOP_HISTORY_ENDPOINT, GET_LIST_HISTORY_ENDPOINT, GET_DETAIL_HISTORY_ENDPOINT } from '@/lib/constants';
 import axiosInstance from "@/lib/axios";
 // Login function
 export const getSports = async (): Promise<any> => {
@@ -116,6 +116,35 @@ export const getHistories = async (queryParams: { diseaseName?: string; sortOrde
     if (axios.isAxiosError(error)) {
       // Handle Axios-specific errors
       throw new Error(error.response?.data?.message || "Failed to fetch histories");
+    }
+    throw new Error("An unexpected error occurred");
+  }
+};
+
+export const getDetailHistory = async (id: number): Promise<any> => {
+  if(!id) return null
+  try {
+    // Retrieve the tokenKey and email from localStorage
+    const tokenKey = localStorage.getItem("tokenKey");
+    const email = localStorage.getItem("email");
+
+    if (!tokenKey || !email) {
+      throw new Error("Authentication credentials are missing");
+    }
+
+    // Call the API with the headers
+    const { data } = await axiosInstance.get(GET_DETAIL_HISTORY_ENDPOINT + id, {
+      headers: {
+        Authorization: `Bearer ${tokenKey}`, // Add the token for validation
+        email, // Include email in headers
+      },
+    });
+
+    return data; // Return the detail of histories
+  } catch (error: any) {
+    if (axios.isAxiosError(error)) {
+      // Handle Axios-specific errors
+      throw new Error(error.response?.data?.message || "Failed to fetch detail history");
     }
     throw new Error("An unexpected error occurred");
   }

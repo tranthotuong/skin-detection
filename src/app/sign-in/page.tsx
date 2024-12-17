@@ -10,7 +10,7 @@ const SignIn: React.FC = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const { login, isAuthenticated, email: emailResponses } = useAuth();
+    const { defaultPage, login, isAuthenticated, email: emailResponses } = useAuth();
     const router = useRouter();
 
     //init
@@ -22,7 +22,7 @@ const SignIn: React.FC = () => {
 
     useEffect(() => {
         if (isAuthenticated) {
-            router.push(DETECTION_URL);
+            router.push(defaultPage);
         }
     }, [isAuthenticated]);
 

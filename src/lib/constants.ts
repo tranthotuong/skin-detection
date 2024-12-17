@@ -12,6 +12,7 @@ export const GET_SPORTS_ENDPOINT  = `${API_BASE_URL}/sport`;
 export const GET_USER_ENDPOINT  = `${API_BASE_URL}/auth/user`;
 export const GET_TOP_HISTORY_ENDPOINT  = `${API_BASE_URL}/scan-history/top`;
 export const GET_LIST_HISTORY_ENDPOINT  = `${API_BASE_URL}/scan-history/list`;
+export const GET_DETAIL_HISTORY_ENDPOINT  = `${API_BASE_URL}/scan-history/`;
 /*PUT*/
 export const PUT_IMAGE_ENDPOINT  = `${API_BASE_URL}/scan-history/diagnose`;
 // export const TOKEN_STORAGE_KEY = "tokenKey";
