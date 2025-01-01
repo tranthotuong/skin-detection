@@ -192,11 +192,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }
 
   const callDiagnoseImage = async (formData: FormData) => {
+    setLoading(true);
     try {
       const response = await diagnoseImageService(formData);
       return response;
     } catch (error: any) {
       throw new Error((error.response?.data?.message as string) || 'Failed to diagnose image');
+    }finally{
+      setLoading(false);
     }
   };
 

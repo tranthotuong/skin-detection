@@ -4,6 +4,7 @@ import { API_BASE_URL, SIGN_IN_URL } from "@/lib/constants";
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
+  timeout: 120000,
   headers: {
     "Content-Type": "application/json",
   },

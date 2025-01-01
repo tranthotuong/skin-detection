@@ -50,7 +50,7 @@ const DetailPage: React.FC<{ params: { id: number } }> = ({ params }) => {
     <div className="bg-gray-100 min-h-screen flex flex-col px-2 py-6 gap-3 text-black">
       {/* Header */}
       <div className="flex justify-center relative text-black">
-        <button className="absolute left-0 ps-5">
+        <button className="absolute left-0 ps-5" onClick={() => router.back()}>
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 text-black">
             <path
               d="M17,11H9.41l3.3-3.29a1,1,0,1,0-1.42-1.42l-5,5a1,1,0,0,0-.21.33,1,1,0,0,0,0,.76,1,1,0,0,0,.21.33l5,5a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42L9.41,13H17a1,1,0,0,0,0-2Z"
@@ -74,18 +74,18 @@ const DetailPage: React.FC<{ params: { id: number } }> = ({ params }) => {
           />
           <div className="text-center md:text-left">
             <h2 className="text-xl md:text-2xl font-bold">{history?.disease?.name}</h2>
-            <button
-              onClick={() => router.push("/faq")}
+            <a target="_blank" 
+              href={`${history?.disease?.url}`}
               className="text-blue-500"
             >
               Learn more
-            </button>
+            </a>
           </div>
         </div>
 
         {/* Range Bars */}
         <div className="mt-6 space-y-4">
-          <RangeBar label="Risk" percent={0.3} color="bg-green-400" />
+          <RangeBar label="Risk" percent={history?.disease?.risk} color="bg-green-400" />
           <RangeBar
             label="Certainty"
             percent={history?.result?.rep_skin_detection?.data.confidence}

@@ -24,13 +24,20 @@ export default function RootLayoutClient({
         .catch((error) => {
           console.error("Service Worker registration failed:", error);
         });
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        registrations.forEach((registration) => {
+          registration.unregister().then(() => {
+            console.log("Service Worker unregistered successfully.");
+          });
+        });
+      });
     }
   }, []);
 
   return (
     <AuthProvider>
       <div className="text-white flex flex-col h-screen">
-            <ChildrenNodeClient>{children}</ChildrenNodeClient>
+        <ChildrenNodeClient>{children}</ChildrenNodeClient>
       </div>
     </AuthProvider>
   );

@@ -1,8 +1,13 @@
+"use client";
+
 import React, { useEffect, useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import { useAuth } from '@/context/AuthContext';
+import { DETECTION_URL } from '@/lib/constants';
+import { useRouter } from 'next/navigation';
 
 const CameraAndUpload: React.FC = () => {
+  const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const webcamRef = useRef<Webcam>(null);
   const [showWebcam, setShowWebcam] = useState(false);
@@ -10,7 +15,7 @@ const CameraAndUpload: React.FC = () => {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [imageURL, setImageURL] = useState<string | null>(null);
-  const { closeCamera, callDiagnoseImage } = useAuth();
+  const { closeCamera, callDiagnoseImage, loading } = useAuth();
   const [videoConstraints, setVideoConstraints] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
@@ -81,9 +86,10 @@ const CameraAndUpload: React.FC = () => {
 
     try {
       const response = await callDiagnoseImage(formData);
-      debugger;
+      closeCamera();
+      router.push(`${DETECTION_URL}/${response.scanHistory.id}`)
     } catch (err: any) {
-      // debugger
+      console.log(err);
     }
   };
 
@@ -105,10 +111,20 @@ const CameraAndUpload: React.FC = () => {
           </div>
         </div>
         {/* Fullscreen Image Viewer */}
+        {loading && (
+           <div
+           className="fixed inset-0 z-50 bg-black bg-opacity-70 flex items-center justify-center"
+         >
+           <img
+             src="/Loading.gif"
+             alt="Fullscreen preview"
+             className="max-w-full max-h-full"
+           />
+         </div>
+        )}
         {imageURL ? (
           <div
             className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center"
-            onClick={closeImage}
           >
             <img
               src={imageURL}
@@ -185,8 +201,8 @@ const CameraAndUpload: React.FC = () => {
                     <path d="M2 12l3-3 3 3" />
                     <path d="M19.016 14v-1.95A7.05 7.05 0 0 0 8 6.22" />
                     <path d="M16.016 17.845A7.05 7.05 0 0 1 5 12.015V10" />
-                    <path d="M5 10V9" stroke-linecap="round" />
-                    <path d="M19 15v-1" stroke-linecap="round" />
+                    <path d="M5 10V9" strokeLinecap="round" />
+                    <path d="M19 15v-1" strokeLinecap="round" />
                   </svg>
                 </button>
               </div>
