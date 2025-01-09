@@ -303,7 +303,7 @@ const Detection: React.FC = () => {
           </div>
         ) : (
           <div className="w-full flex flex-col h-full">
-            <div className="basis-full">
+            <div className="basis-full overflow-hidden h-full flex flex-col">
               <Header />
 
               <div className="items-center px-6 py-3">
@@ -348,8 +348,8 @@ const Detection: React.FC = () => {
                 <Link href={HISTORY_URL} className="text-gray-400 font-semibold">see all</Link>
               </div>
 
-              <div className="px-6">
-                <div className="gap-3 flex flex-col flow overflow-x-hidden overflow-y-auto">
+              <div className="px-6 overflow-x-hidden overflow-y-auto">
+                <div className="gap-3 flex flex-col flow">
                   {topHistories.length > 0 && topHistories.map((h) => (
                     <Link href={`${DETECTION_URL}/${h.id}`} key={h.id} className="flex justify-between gap-x-6">
                       <div className="flex min-w-0 gap-x-4">
